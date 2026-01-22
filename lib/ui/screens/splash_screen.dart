@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../widget/body_background.dart';
 import 'login_screen.dart';
 
 
@@ -13,13 +14,15 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
 
+//=====================
   @override
   void initState(){
     super.initState();
     goToLogin();
   }
+//=====================
 
-
+//-------------
   void goToLogin() {
     Future.delayed(const Duration(seconds: 2)).then((value) {
       Navigator.pushAndRemoveUntil(context,
@@ -28,25 +31,18 @@ class _SplashScreenState extends State<SplashScreen> {
     });
 
   }
+//-------------
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          SvgPicture.asset(
-            "assets/images/bgs.svg",
-            width: double.infinity,
-            height: double.infinity,
-            fit: BoxFit.cover,
+      body: BodyBackground(
+        child: Center(
+          child: SvgPicture.asset(
+            "assets/images/logo.svg",
+            width: 200,
           ),
-          Center(
-            child: SvgPicture.asset(
-              "assets/images/logos.svg",
-              width: 120,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
