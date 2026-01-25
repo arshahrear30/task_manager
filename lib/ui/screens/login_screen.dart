@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/ui/screens/forgot_password_screen.dart';
+import 'package:task_manager/ui/screens/sign_up_screen.dart';
 import 'package:task_manager/ui/widget/body_background.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -87,8 +89,17 @@ class _LoginScreenState extends State<LoginScreen> {
               
                   Center(
                       child: TextButton(
-                        onPressed: (){},
-                        child: Text("Forgot Password?",
+                        onPressed: (){
+
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ForgotPasswordScreen(),
+                              ),
+                          );
+
+                              },
+                        child: const Text("Forgot Password?",
                           style: TextStyle(
                             color: Colors.grey,
                             fontSize: 16,
@@ -114,7 +125,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       TextButton(
                         onPressed: () {
 
-                      //Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpScreen() ),); //ek screen theke onno screen e jawar upay.
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SignUpScreen(),
+                              ),
+                          );
+
+
+                              //Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpScreen() ),); //ek screen theke onno screen e jawar upay.
 
                         },
                         child: const Text(
