@@ -9,6 +9,40 @@ class TaskManagerApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),
+
+
+      theme: ThemeData( //onek somoy app e same design bar bar use kortey hoy .. tai by default design er jonno themedate te kori ..
+        inputDecorationTheme:const InputDecorationTheme(
+          fillColor: Colors.black12,
+          filled: true,
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide.none,
+          ),
+        ),
+
+
+        textTheme: const TextTheme( //ei ta app er onno jaygay call korley auto style niya nibay.
+          titleLarge: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+
+        primaryColor: Colors.green,
+        primarySwatch: Colors.green,//app er prathomik babey prottekta jinish er bydefault colour ta green kore dibe.
+
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+          ),
+
+        ),
+
+
+      ),
     );
   }
 }
