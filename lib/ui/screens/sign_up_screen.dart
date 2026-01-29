@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/data.network_caller/network_caller.dart';
+import 'package:task_manager/data.network_caller/network_response.dart';
+import 'package:task_manager/data.network_caller/utility/urls.dart';
 import 'package:task_manager/ui/widget/body_background.dart';
+import 'package:task_manager/ui/widget/snack_message.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -29,6 +33,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordTEController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _signUpInProgress = false; // in progress er jonno use korci load hoibo icon ..
+
 
 
 
@@ -57,6 +63,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
 
                     TextFormField(
+                      controller: _emailTEController,
 
 
                       keyboardType: TextInputType.emailAddress,
@@ -133,7 +140,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
-                          return 'Mobile number is required';
+                          return 'Password is required at least 8 digit';
                         }if (value.length < 8) {
                           return 'Password must be at least 8 characters long';
                         }
@@ -150,15 +157,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                     SizedBox(
                       width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
 
-                          if (_formKey.currentState!.validate()) {
+                      child: Visibility( //eta deyar karon e loading ta visibl hoibo .
 
-                          }
 
-                        },
-                        child: const Icon(Icons.arrow_circle_right_outlined),
+                        replacement: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        visible: _signUpInProgress==false, //
+
+
+
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _signUp();
+                          } ,
+                          child: const Icon(Icons.arrow_circle_right_outlined),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 48),
@@ -193,6 +208,71 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
+
+  Future<void> _signUp() async{
+    //await শুধু async function এর ভেতরে কাজ করে। যেখানে Future আছে → সেখানে async লাগে।
+    //async : UI ব্লক হবে না ..২ সেকেন্ড পরে result আসবে.. meanwhile ইউজার স্ক্রল/টাইপ করতে পারবে
+
+    if (_formKey.currentState!.validate()) {
+
+      _signUpInProgress = true;
+      if(mounted){
+        setState(() {
+        });
+      }
+
+
+      final NetworkResponse response = await NetworkCaller().postRequest(Urls.registration, body : {
+
+        "email":_emailTEController.text.trim(),
+        "firstName":_firstNameTEController.text.trim(),
+        "lastName":_lastNameTEController.text.trim(),
+        "mobile":_mobileTEController.text.trim(),
+        "password":_passwordTEController.text,
+
+
+      });
+      _signUpInProgress = false ; //network call to ses abar ar gurar dorkar nai .. tai false
+      if(mounted){
+        setState(() {
+        });
+      }
+
+      if(response.isSuccess){
+        _clearTextFields(); //ek bar succes hoiley purber input gula mucay jabe
+
+
+
+
+        if(mounted){//mounted : user ki ei screen e acay ? thakle ki hoibo ? seitar kaz i hoilo mountain
+          showSnackMessage(context, 'Account has been created successfully');
+        }else{
+
+
+          if(mounted) { //mounted : user ki ei screen e acay ? thakle ki hoibo ? seitar kaz i hoilo mountain
+
+            showSnackMessage(
+                context, 'Account has been created failed',
+                true);
+          }
+
+        }
+
+      }
+    }
+  }
+
+
+  void _clearTextFields() {// 1 bar signup done hoiley purber input gula mucay jabe
+    _emailTEController.clear();
+    _firstNameTEController.clear();
+    _lastNameTEController.clear();
+    _mobileTEController.clear();
+    _passwordTEController.clear();
+
+
+  }
+
 
   //sob kicu banano and dispose kora o joruri ..
 

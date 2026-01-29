@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:http/http.dart';
 import 'package:task_manager/data.network_caller/network_response.dart';
 
@@ -27,6 +28,8 @@ class NetworkCaller {// Wrapper class: সব network call এক জায়গ�
         },
       );
 
+      log(response.statusCode.toString());
+      log(response.body.toString());
 
 
 
