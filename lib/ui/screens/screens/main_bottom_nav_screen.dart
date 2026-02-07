@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/ui/screens/screens/new_tasks_screen.dart';
 
 
 class MainBottomNavScreen extends StatefulWidget { //ট্যাব পরিবর্তন হলে UI-ও পরিবর্তন হবে।
@@ -12,7 +13,7 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
   int _selectedIndex = 0; //এটা মনে রাখে এখন কোন ট্যাব সিলেক্ট করা আছে।0 মানে প্রথম ট্যাব → New Tasks
 
   final List<Widget> _screens = const [
-    //NewTasksScreen(),
+    NewTasksScreen(),
     //ProgressTasksScreen(),
     //CompletedTasksScreen(),
     //CancelledTasksScreen(),
