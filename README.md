@@ -1,4 +1,4 @@
 # task_manager
 
-today will be updated
+For nurbacon i can't attend. Today night ins hallah i will 
 
