@@ -3,7 +3,7 @@ import 'package:task_manager/data.network_caller/network_caller.dart';
 import 'package:task_manager/data.network_caller/network_response.dart';
 import 'package:task_manager/data.network_caller/utility/urls.dart';
 import 'package:task_manager/ui/screens/forgot_password_screen.dart';
-import 'package:task_manager/ui/screens/screens/main_bottom_nav_screen.dart';
+import 'package:task_manager/ui/screens/main_bottom_nav_screen.dart';
 import 'package:task_manager/ui/screens/sign_up_screen.dart';
 import 'package:task_manager/ui/widget/body_background.dart';
 import 'package:task_manager/ui/widget/snack_message.dart';
@@ -93,7 +93,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: double.infinity,
                 
                       child: ElevatedButton(
-                      onPressed: (){},
+                      onPressed: (){
+                        //
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MainBottomNavScreen(),
+                          ),
+                        );//ek screen theke onno screen e jawar upay.
+
+
+                      },
                       child: const Icon(Icons.arrow_circle_right_outlined),
                     ),
                     ),
