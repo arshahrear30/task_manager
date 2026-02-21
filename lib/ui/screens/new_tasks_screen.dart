@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/ui/widget/profile_summary_card.dart';
+import 'package:task_manager/ui/widget/summary_card.dart';
 
 class NewTasksScreen extends StatefulWidget {
   const NewTasksScreen({super.key});
@@ -15,52 +17,44 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
 
         body: Column(
         children: [
-          ListTile(
-            leading: CircleAvatar(
-              child: Icon(Icons.person),
-            ), // CircleAvatar
-            title: Text('Rabbil Hasan', style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w700
-            ),), // TextStyle, Text
-            subtitle: Text('rabbil@gmail.com', style: TextStyle(
-                color: Colors.white
-            ),), // TextStyle, Text
-            trailing: Icon(Icons.arrow_forward),
-            tileColor: Colors.green,
-          ), // ListTile
+          ProfileSummaryCard(), // ListTile
 
 
 
-          Row(
-            children: [
-              SummaryCard() ,// Card
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32),
-                  child: Column(
-                    children: [
-                      Text('9', style: Theme.of(context).textTheme.titleLarge,),
-                      const Text('New'),
-                    ],
-                  ), // Column
-                ), // Padding
-              ) ,// Card
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32),
-                  child: Column(
-                    children: [
-                      Text('9', style: Theme.of(context).textTheme.titleLarge,),
-                      const Text('New'),
-                    ],
-                  ), // Column
-                ), // Padding
-              ) ,// Card
-            ],
-
-
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                SummaryCard(
+                  count: '92',
+                  title: 'New',
+                ) ,// Card
+                SummaryCard(
+                  count: '92',
+                  title: 'In Progress',
+                ) ,// Card
+                SummaryCard(
+                  count: '92',
+                  title: 'Completed',
+                ) ,// Card
+                SummaryCard(
+                  count: '92',
+                  title: 'Cancelled',
+                ) ,// Card
+            
+              ],
+            
+            
+            ),
           ),
+          Expanded(
+            child: ListView.builder(
+                itemCount: 1,
+                itemBuilder: (context, index) {
+                  return TaskItemCard(); // Card
+                }
+            ), // ListView.builder
+          ) // Expanded
 
 
 
@@ -73,24 +67,46 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
   }
 }
 
-//widget alada korar jonno purber widget key click kore refactor e click korbo and Extract flutter widget
-class SummaryCard extends StatelessWidget {
-  const SummaryCard({
+class TaskItemCard extends StatelessWidget {
+  const TaskItemCard({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('9', style: Theme.of(context).textTheme.titleLarge,),
-            const Text('New'),
+            Text('Title will be here', style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500
+            ),), // TextStyle, Text
+            Text('Descriptions'),
+            Text('Date : 12-12-2020'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Chip(label: Text('New', style: TextStyle(
+                  color: Colors.white
+              ),), backgroundColor: Colors.blue,),
+                Wrap(
+                  children: [
+                    IconButton(onPressed: (){}, icon: Icon(Icons.delete)),
+                    IconButton(onPressed: (){}, icon: Icon(Icons.edit)),
+                  ]
+
+                )
+              ],
+            ) // TextStyle, Text, Chip
           ],
         ), // Column
       ), // Padding
     );
   }
 }
+
+
