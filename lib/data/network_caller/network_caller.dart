@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart';
-import 'package:task_manager/data.network_caller/network_response.dart';
+import 'package:task_manager/data/network_caller/network_response.dart';
 
 
 //Dependency Inversion Principle (DIP) কী?
