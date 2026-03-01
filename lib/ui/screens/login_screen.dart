@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_manager/data/network_caller/network_caller.dart';
 import 'package:task_manager/data/network_caller/network_response.dart';
 import 'package:task_manager/data/utility/urls.dart';
@@ -221,6 +222,11 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {});
     }
     if (response.isSuccess) {
+
+      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+      await sharedPreferences.setString('token', response.jsonResponse!['token']);
+
+
       if (mounted) {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const MainBottomNavScreen()));
