@@ -18,7 +18,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
-  final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _loginInProgress = false;
 
 
@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: SingleChildScrollView( //ete deyar karon e keyboard asley jei akta screen e broken image asto seitacoila jaibo ..
 
               child: Form(
-                key: _globalKey,
+                key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,//start : cross axis-এর শুরু দিক থেকে align করো
                 
@@ -59,6 +59,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       decoration: InputDecoration(
                         hintText: "Email",
                       ),
+
+                      validator: (String? value) {
+                        if (value?.trim().isEmpty ?? true) {
+                          return 'Enter valid email';
+                        }
+                        return null;
+                      },
+
                     ),
                 
                 
@@ -83,6 +91,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         hintText: "Password",
                 
                       ),
+
+                      validator: (String? value) {
+                        if (value?.isEmpty ?? true) {
+                          return 'Enter valid password';
+                        }
+                        return null;
+                      },
+
                     ),
                 
                 
@@ -92,20 +108,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 
                       width: double.infinity,
                 
-                      child: ElevatedButton(
-                      onPressed: (){
-                        //
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const MainBottomNavScreen(),
-                          ),
-                        );//ek screen theke onno screen e jawar upay.
+                      child: Visibility(
+                        visible: _loginInProgress==false,
 
+                        replacement: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
 
-                      },
-                      child: const Icon(Icons.arrow_circle_right_outlined),
-                    ),
+                        child: ElevatedButton(
+                        onPressed: login,
+                        child: const Icon(Icons.arrow_circle_right_outlined),
+                                            ),
+                      ),
                     ),
                 
                 
@@ -185,7 +199,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Future<void> _login() async {
+  Future<void> login() async {
+
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
     _loginInProgress = true;
     if (mounted) {
       setState(() {});
