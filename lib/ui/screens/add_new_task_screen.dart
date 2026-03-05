@@ -77,10 +77,16 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                           const SizedBox(height: 16,),
                           SizedBox(
                             width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: createTask,
-                              child: const Icon(
-                                  Icons.arrow_circle_right_outlined),
+                            child: Visibility(
+                              visible: _createTaskInProgress == false,
+                              replacement: const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                              child: ElevatedButton(
+                                onPressed: createTask,
+                                child: const Icon(
+                                    Icons.arrow_circle_right_outlined),
+                              ),
                             ),
 
                           ),
@@ -110,7 +116,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
         "description": _descriptionTEController.text.trim(),
         "status": "New"
       });
-      _createTaskInProgress = false;
+      _createTaskInProgress == false;
       if (mounted) {
         setState(() {});
       }
