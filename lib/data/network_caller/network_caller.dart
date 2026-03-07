@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart';
 import 'package:task_manager/data/network_caller/network_response.dart';
+import 'package:task_manager/ui/controllers/auth_controller.dart';
 
 
 //Dependency Inversion Principle (DIP) কী?
@@ -25,9 +26,11 @@ class NetworkCaller {// Wrapper class: সব network call এক জায়গ�
         body: jsonEncode(body),       // Dart Map কে JSON string এ কনভার্ট করা
         headers: {
           'Content-type': 'Application/json', // বলছি সার্ভারকে যে ডাটা JSON
+          'token' : AuthController.token.toString(),//token pass
         },
       );
 
+      log(response.headers.toString());//header e token pass korci.
       log(response.statusCode.toString());
       log(response.body.toString());
 
