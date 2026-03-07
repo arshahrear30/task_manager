@@ -23,7 +23,7 @@ class AuthController {
 
   static Future<bool> checkAuthState() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String? token = sharedPreferences.getString('token');
+    sharedPreferences.containsKey('token');
     if (token != null) {
       await initializeUserCache();
       return true;
