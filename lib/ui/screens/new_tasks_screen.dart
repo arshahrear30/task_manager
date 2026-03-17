@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/data/models/task_list_model.dart';
+import 'package:task_manager/data/network_caller/network_caller.dart';
+import 'package:task_manager/data/network_caller/network_response.dart';
+import 'package:task_manager/data/utility/urls.dart';
+import 'package:task_manager/ui/screens/new_tasks_screen.dart';
 import 'package:task_manager/ui/widget/profile_summary_card.dart';
 import 'package:task_manager/ui/widget/summary_card.dart';
 import 'package:task_manager/ui/widget/task_item_card.dart';
+
 
 class NewTasksScreen extends StatefulWidget {
   const NewTasksScreen({super.key});
@@ -10,7 +16,10 @@ class NewTasksScreen extends StatefulWidget {
   State<NewTasksScreen> createState() => _NewTasksScreenState();
 }
 
-class _NewTasksScreenState extends State<NewTasksScreen> {
+
+
+  class _NewTasksScreenState extends State<NewTasksScreen> {
+  //new code eikhan e likbo.
   @override
   Widget build(BuildContext context) {
 
@@ -29,7 +38,7 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
       ),
 
 
-      
+
       body: SafeArea(
         child: Column(
           children: [
@@ -65,8 +74,8 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
                 ),
               ),
             ),
-        
-        
+
+
             Expanded(
               child: ListView.builder(
                   itemCount: 5,
@@ -75,7 +84,7 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
                   }
               ), // ListView.builder
             ), // Expanded
-        
+
           ],
         ),
       ), // Column
