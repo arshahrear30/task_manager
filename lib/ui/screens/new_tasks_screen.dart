@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/data/models/task_count.dart';
+import 'package:task_manager/data/models/task_count_summary_list_model.dart';
 import 'package:task_manager/data/models/task_list_model.dart';
 import 'package:task_manager/data/network_caller/network_caller.dart';
 import 'package:task_manager/data/network_caller/network_response.dart';
@@ -19,8 +21,52 @@ class NewTasksScreen extends StatefulWidget {
 
 
   class _NewTasksScreenState extends State<NewTasksScreen> {
-  //new code eikhan e likbo.
-  @override
+  //new task gula key get korbey tar code
+    bool getNewTaskInProgress = false;
+    bool getTaskCountSummaryInProgress = false;
+    TaskListModel taskListModel = TaskListModel();
+    TaskCountSummaryListModel taskCountSummaryListModel = TaskCountSummaryListModel();
+
+
+    Future<void> getTaskCountSummaryList() async {
+      getTaskCountSummaryInProgress = true;
+      if (mounted) {
+        setState(() {});
+      }
+      final NetworkResponse response = await NetworkCaller().getRequest(Urls.getTaskStatusCount);
+      if (response.isSuccess) {
+        taskCountSummaryListModel = TaskCountSummaryListModel.fromJson(response.jsonResponse!);
+      }
+      getTaskCountSummaryInProgress = false;
+      if (mounted) {
+        setState(() {});
+      }
+    }
+
+    Future<void> getNewTaskList() async {
+      getNewTaskInProgress = true;
+      if (mounted) {
+        setState(() {});
+      }
+      final NetworkResponse response = await NetworkCaller().getRequest(Urls.getNewTasks);
+      if (response.isSuccess) {
+        taskListModel = TaskListModel.fromJson(response.jsonResponse!);
+      }
+      getNewTaskInProgress = false;
+      if (mounted) {
+        setState(() {});
+      }
+    }
+
+    @override
+    void initState() {
+      super.initState();
+      getTaskCountSummaryList();
+      getNewTaskList();
+    }
+
+
+    @override
   Widget build(BuildContext context) {
 
     return Scaffold(
@@ -43,48 +89,42 @@ class NewTasksScreen extends StatefulWidget {
         child: Column(
           children: [
             const ProfileSummaryCard(),
-            const SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Padding(
-                padding: EdgeInsets.only(left: 16.0, right: 16),
-                child: Row(
-                  children: [
 
-                    SummaryCard(
-                      count: '92',
-                      title: 'New',
-                    ), // SummaryCard
-
-                    SummaryCard(
-                      count: '92',
-                      title: 'In progress',
-                    ), // SummaryCard
-
-                    SummaryCard(
-                      count: '92',
-                      title: 'Completed',
-                    ), // SummaryCard
-
-                    SummaryCard(
-                      count: '92',
-                      title: 'Cancelled',
-                    ), // SummaryCard
-
-                  ],
+            Visibility(
+              visible: getTaskCountSummaryInProgress == false&& (taskCountSummaryListModel.taskCountList?.isNotEmpty ?? false),
+              replacement: const LinearProgressIndicator(),
+              child: SizedBox(
+                height: 120,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: taskCountSummaryListModel.taskCountList?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    TaskCount taskCount =taskCountSummaryListModel.taskCountList![index];
+                    return FittedBox(
+                      child: SummaryCard(
+                        count: taskCount.sum.toString(),
+                        title: taskCount.sId ?? '',
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
 
-
             Expanded(
-              child: ListView.builder(
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return const TaskItemCard(); // Card
-                  }
+              child: Visibility(
+                visible: getNewTaskInProgress==false,
+                replacement: const Center(child: CircularProgressIndicator()),
+                child: ListView.builder(
+                    itemCount: taskListModel.taskList?.length ?? 0 ,//empty to hoitey parey tai ? use korci and 0
+                    itemBuilder: (context, index) {
+                      return  TaskItemCard(
+                        task: taskListModel.taskList![index],
+                      ); // Card
+                    }
+                ),
               ), // ListView.builder
             ), // Expanded
-
           ],
         ),
       ), // Column

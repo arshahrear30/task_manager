@@ -24,7 +24,7 @@ class _ProgressTasksScreenState extends State<ProgressTasksScreen> {
             child: ListView.builder(
                 itemCount: 5,
                 itemBuilder: (context, index) {
-                  return const TaskItemCard(); // Card
+                 // return const TaskItemCard(); // Card
                 }
             ), // ListView.builder
           ) // Expanded
