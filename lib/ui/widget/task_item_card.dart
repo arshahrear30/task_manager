@@ -1,13 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/data/models/task.dart';
+import 'package:task_manager/data/network_caller/network_caller.dart';
+import 'package:task_manager/data/utility/urls.dart';
 
-class TaskItemCard extends StatelessWidget {
+enum TaskStatus { //enum ekta class er moto but etar set of value acey ..
+  New,
+  Progress,
+  Completed,
+  Cancelled,
+}
+
+
+class TaskItemCard extends StatefulWidget {
   const TaskItemCard({
     super.key, required this.task,
   });
 
   final Task task;
 
+  @override
+  State<TaskItemCard> createState() => _TaskItemCardState();
+}
+
+class _TaskItemCardState extends State<TaskItemCard> {
+
+  Future<void> updateTaskStatus(String status) async {
+
+    final response = await NetworkCaller().getRequest(Urls());
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,17 +40,17 @@ class TaskItemCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
              Text(
-              task.title ?? '',//null hoiley empty dekaibo
+              widget.task.title ?? '',//null hoiley empty dekaibo
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
-            Text(task.description ?? ''),
-            Text('Date : ${task.createdDate}'),
+            Text(widget.task.description ?? ''),
+            Text('Date : ${widget.task.createdDate}'),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                  Chip(
                   label: Text(
-                    task.status ?? 'New', // kono kicu nai by default New
+                    widget.task.status ?? 'New', // kono kicu nai by default New
                     style: TextStyle(color: Colors.white),
                   ),
                   backgroundColor: Colors.blue,
@@ -39,7 +60,11 @@ class TaskItemCard extends StatelessWidget {
                     IconButton(
                         onPressed: () {},
                         icon: const Icon(Icons.delete_forever_outlined)),
-                    IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
+                    IconButton(onPressed: () {//edit button er maz e ekta modal banacci
+
+                      showUpdateStatusModal();
+
+                    }, icon: const Icon(Icons.edit)),
                   ],
                 )
               ],
@@ -49,4 +74,54 @@ class TaskItemCard extends StatelessWidget {
       ),
     );
   }
+
+
+
+  void showUpdateStatusModal() {
+    List<ListTile> items = TaskStatus.values
+        .map((e) => ListTile(
+      title: Text(e.name), //enum thekey name gula coley asbey
+
+      onTap: () {
+        updateTaskStatus(e.name);
+        Navigator.pop(context);
+      },
+
+    ))
+        .toList();
+
+    showDialog(
+        context: context,
+        builder: (context) {
+
+          return AlertDialog(
+            title: const Text('Update status'),
+
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: items,
+            ),
+
+            actions: [
+              ButtonBar(
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: Colors.blueGrey,
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          );
+        });
+      }
+
+
 }
