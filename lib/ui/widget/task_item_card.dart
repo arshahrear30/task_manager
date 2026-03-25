@@ -26,7 +26,8 @@ class _TaskItemCardState extends State<TaskItemCard> {
 
   Future<void> updateTaskStatus(String status) async {
 
-    final response = await NetworkCaller().getRequest(Urls());
+    final response = await NetworkCaller()
+        .getRequest(Urls.updateTaskStatus(widget.task.sId ?? '', status));
 
   }
 
