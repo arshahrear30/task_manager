@@ -13,23 +13,38 @@ enum TaskStatus { //enum ekta class er moto but etar set of value acey ..
 
 class TaskItemCard extends StatefulWidget {
   const TaskItemCard({
-    super.key, required this.task,
+    super.key,
+    required this.task,
+    required this.onStatusChange,
+    required this.showProgress,
   });
 
   final Task task;
+  final VoidCallback onStatusChange; //oi screen ta data input korar por auto refresh howar jonno
+  //ete deyr jonno prottekta screen er TaskItemCard er vitor onStatusChanged nia kaz kortey hoibo
+  final Function(bool) showProgress; //status change hoiley jatey instant load hoy .
+
+
 
   @override
   State<TaskItemCard> createState() => _TaskItemCardState();
 }
 
 class _TaskItemCardState extends State<TaskItemCard> {
-
+//--
   Future<void> updateTaskStatus(String status) async {
-
+    widget.showProgress(true);//progress ta true kore dilam ekon load nibey
     final response = await NetworkCaller()
         .getRequest(Urls.updateTaskStatus(widget.task.sId ?? '', status));
 
+    if (response.isSuccess) {
+      widget.onStatusChange();
+    }
+    widget.showProgress(false);
   }
+  //--
+
+  //-- cailey same vabey delete task add kortey pari api dia o . kintu akon delete api nai .. HW
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +73,13 @@ class _TaskItemCardState extends State<TaskItemCard> {
                 ),
                 Wrap(
                   children: [
-                    IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.delete_forever_outlined)),
+
+                   // IconButton(
+                   //     onPressed: () {},
+                   //     icon: const Icon(Icons.delete_forever_outlined)),
+                    // delete api nai .. tobey HomeWork kortey paro
+
+
                     IconButton(onPressed: () {//edit button er maz e ekta modal banacci
 
                       showUpdateStatusModal();
