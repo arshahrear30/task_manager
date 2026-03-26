@@ -94,18 +94,23 @@ class NewTasksScreen extends StatefulWidget {
               replacement: const LinearProgressIndicator(),
               child: SizedBox(
                 height: 120,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: taskCountSummaryListModel.taskCountList?.length ?? 0,
-                  itemBuilder: (context, index) {
-                    TaskCount taskCount =taskCountSummaryListModel.taskCountList![index];
-                    return FittedBox(
-                      child: SummaryCard(
-                        count: taskCount.sum.toString(),
-                        title: taskCount.sId ?? '',
-                      ),
-                    );
-                  },
+
+                child: RefreshIndicator(
+                  onRefresh: getNewTaskList, //etar deyar karon e ekon screen er upon er dikey tan diley that mean swap kore tan diley refresh hoibo
+
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: taskCountSummaryListModel.taskCountList?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      TaskCount taskCount =taskCountSummaryListModel.taskCountList![index];
+                      return FittedBox(
+                        child: SummaryCard(
+                          count: taskCount.sum.toString(),
+                          title: taskCount.sId ?? '',
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
@@ -137,11 +142,11 @@ class NewTasksScreen extends StatefulWidget {
                       );
                     }
                 ),
-              ), // ListView.builder
-            ), // Expanded
+              ),
+            ),
           ],
         ),
-      ), // Column
+      ),
     );
   }
 }
