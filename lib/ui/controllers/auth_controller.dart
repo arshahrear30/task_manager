@@ -5,7 +5,7 @@ import 'package:task_manager/data/models/user_model.dart';
 
 class AuthController {
   static String? token;
-  static UserModel? user;
+  static UserModel? user; //ValueNotifier ata diya all data ekshatey update kora jay emon kicu ..
 
   static Future<void> saveUserInformation(String t, UserModel model) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -14,6 +14,13 @@ class AuthController {
     token = t;
     user = model;
   }
+
+  static Future<void> updateUserInformation( UserModel model) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences.setString('user', jsonEncode(model.toJson()));
+    user = model;
+  }
+
 
   static Future<void> initializeUserCache() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
