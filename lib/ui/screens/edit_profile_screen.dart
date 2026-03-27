@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/data/network_caller/network_caller.dart';
+import 'package:task_manager/data/network_caller/network_response.dart';
+import 'package:task_manager/data/utility/urls.dart';
+import 'package:task_manager/ui/controllers/auth_controller.dart';
 import 'package:task_manager/ui/widget/body_background.dart';
 import 'package:task_manager/ui/widget/profile_summary_card.dart';
+import 'package:task_manager/ui/widget/snack_message.dart';
+
+//HW input validation gula dhik korba signup page er moto .
 
 
 class EditProfileScreen extends StatefulWidget {
@@ -11,6 +18,25 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  final TextEditingController _emailTEController = TextEditingController();
+  final TextEditingController _firstNameTEController = TextEditingController();
+  final TextEditingController _lastNameTEController = TextEditingController();
+  final TextEditingController _mobileTEController = TextEditingController();
+  final TextEditingController _passwordTEController = TextEditingController();
+
+  bool _updateProfileInProgress = false;
+
+
+  @override
+  void initState() {
+    super.initState();
+    _emailTEController.text = AuthController.user?.email ?? '';
+    _firstNameTEController.text = AuthController.user?.firstName ?? '';
+    _lastNameTEController.text = AuthController.user?.lastName ?? '';
+    _mobileTEController.text = AuthController.user?.mobile ?? '';
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,6 +69,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
 
                       TextFormField(
+                        controller: _emailTEController,
                         decoration: const InputDecoration(
                           hintText: 'Email',
                         ),
@@ -51,6 +78,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       const SizedBox(height: 8,),
 
                       TextFormField(
+                        controller: _firstNameTEController,
                         decoration: const InputDecoration(
                           hintText: 'First name',
                         ),
@@ -59,6 +87,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       const SizedBox(height: 8,),
 
                       TextFormField(
+                        controller: _lastNameTEController,
                         decoration: const InputDecoration(
                           hintText: 'Last name',
                         ),
@@ -68,6 +97,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       const SizedBox(height: 8,),
 
                       TextFormField(
+                        controller: _mobileTEController,
                         decoration: const InputDecoration(
                           hintText: 'Mobile',
                         ),
@@ -76,8 +106,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       const SizedBox(height: 8,),
 
                       TextFormField(
+                        controller: _passwordTEController,
                         decoration: const InputDecoration(
-                          hintText: 'Password',
+                          hintText: 'Password (optional)',
                         ),
                       ),
                       const SizedBox(height: 16,),
@@ -88,23 +119,74 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: const Icon(Icons.arrow_circle_right_outlined),
+                          child: Icon(Icons.arrow_circle_right_outlined),
                         ),
                       ),
 
 
-                    ],
-                  ), // Column
-                ), // Padding
-                            ),
-              ), // SingleChildScrollView, Expanded
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             )
           ],
-        ), // Column
-      ), // SafeArea
-    ); // Scaffold
+        ),
+      ),
+    );
   }
-}
+
+
+//api call er jonno ekta Future method banabo updateProfile
+
+Future<void> updateProfile() async {
+
+  _updateProfileInProgress = true;
+
+  if (mounted) { //etar maney screen e kaz korley tokon set state hoibo .na hoy hobe na.
+    setState(() {});
+  }
+
+
+      Map<String, dynamic> inputData = {
+        "firstName": _firstNameTEController.text.trim(),
+        "lastName": _lastNameTEController.text.trim(),
+        "email": _emailTEController.text.trim(),
+        "mobile": _mobileTEController.text.trim(),
+      };
+
+      if(_passwordTEController.text.trim().isNotEmpty){
+        inputData['password'] = _passwordTEController.text.trim();
+      }
+
+
+      final NetworkResponse response = await NetworkCaller().postRequest(
+        Urls.updateProfile, body: inputData,);
+
+      _updateProfileInProgress = false;
+      if (mounted) {
+        setState(() {});
+      }
+
+
+      if (response.isSuccess) {
+
+        if (mounted) {
+          showSnackMessage(context, 'Update profile success!');
+        }
+
+      } else {
+
+        if (mounted) {
+          showSnackMessage(context, 'Update profile failed. Try again.');
+        }
+
+        }
+      }
+    }
+//ei khan e } bracket beshi ascey ata fixed kortey hoibo .eta koi basabo ?
+
+
 
 
 
@@ -120,7 +202,7 @@ class photoPickerField extends StatelessWidget {
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8)
-      ), // BoxDecoration
+      ),
 
       child: Row(
         children: [
@@ -153,3 +235,4 @@ class photoPickerField extends StatelessWidget {
     );
   }
 }
+
