@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager/ui/screens/splash_screen.dart';
 
 class TaskManagerApp extends StatelessWidget {
@@ -9,7 +10,9 @@ class TaskManagerApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+
+    //State manage, controller binding, route management ,,GETX diya sikmu akon
+    return GetMaterialApp(
 
       navigatorKey: navigationKey,
 
@@ -49,6 +52,19 @@ class TaskManagerApp extends StatelessWidget {
 
 
       ),
+      initialBinding: ControllerBinder(),//
+
     );
   }
+}
+
+//jei sokol controller getx e use korbo tader material app a initial binding kore dei tar class
+
+
+class ControllerBinder extends Bindings {
+  @override
+  void dependencies() {
+    // TODO: implement dependencies
+  }
+
 }

@@ -202,51 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Future<void> login() async {
 
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-
-    _loginInProgress = true;
-    if (mounted) {
-      setState(() {});
-    }
-
-    NetworkResponse response = await NetworkCaller().postRequest(Urls.login, body:{
-      "email": _emailTEController.text.trim(),
-      "password": _passwordTEController.text,
-    },
-    isLogin: true);
-    _loginInProgress = false;
-    if (mounted) {
-      setState(() {});
-    }
-    if (response.isSuccess) {
-
-      await AuthController.saveUserInformation(
-      response.jsonResponse!['token'], UserModel.fromJson(response.jsonResponse!['data']));
-      //data gula doira auth controller er saveUserInformation e pataibey
-
-
-
-      if (mounted) {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const MainBottomNavScreen()));
-      }
-    } else {
-      if (response.statusCode == 401) {
-        if (mounted) {
-          showSnackMessage(context, 'Please check email/password');
-        }
-      } else {
-        if (mounted) {
-          showSnackMessage(context, 'Login failed. Try again');
-        }
-      }
-    }
-
-  }
 
 
 
