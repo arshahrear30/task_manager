@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_manager/ui/screens/splash_screen.dart';
 
+import 'ui/controllers/login_controller.dart';
+
 class TaskManagerApp extends StatelessWidget {
   const TaskManagerApp({super.key});
 
@@ -64,7 +66,8 @@ class TaskManagerApp extends StatelessWidget {
 class ControllerBinder extends Bindings {
   @override
   void dependencies() {
-    // TODO: implement dependencies
+   Get.put(LoginController());
+
   }
 
 }
