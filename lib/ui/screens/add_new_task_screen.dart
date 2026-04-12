@@ -125,7 +125,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
       if (response.isSuccess) {
         _subjectTEController.clear();
         _descriptionTEController.clear();
-        Get. find<NewTaskController>().getNewTaskList(); //state managment diya ei code ta likci .eta deyar karon e auto Rephrase hoibo
+        Get. find<NewTaskController>().getNewTaskList(); //state management diya ei code ta likci .eta deyar karon e auto Rephrase hoibo
         if (mounted) {
           showSnackMessage(context, 'New task added!');
         }

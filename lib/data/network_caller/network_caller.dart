@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:task_manager/app.dart';
 import 'package:task_manager/data/network_caller/network_response.dart';
@@ -134,7 +135,7 @@ class NetworkCaller {// Wrapper class: সব network call এক জায়গ�
   //get api
 
 
-  Future<void> backToLogin() async {
+   Future<void> backToLogin() async {
     await AuthController.clearAuthData(); //share preperence e token dia jey data save hoicey oita clear korey
 
     Navigator.pushAndRemoveUntil(

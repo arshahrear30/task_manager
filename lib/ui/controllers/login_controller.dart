@@ -34,7 +34,7 @@ class LoginController extends GetxController{
     _loginInProgress = false;
     update();
     if (response.isSuccess) {
-      await AuthController.saveUserInformation(
+      await Get.find<AuthController>().saveUserInformation(
           response.jsonResponse!['token'],
           UserModel.fromJson(response.jsonResponse!['data']));
       //data gula doira auth controller er saveUserInformation e pataibey

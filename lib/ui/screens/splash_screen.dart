@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
   //-------------
 
   Future<void> goToLogin() async {
-    final bool isLoggedIn = await AuthController.checkAuthState();
+    final bool isLoggedIn = await Get.find<AuthController>().checkAuthState();
 
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String? token = sharedPreferences.getString('token');
