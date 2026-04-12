@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager/data/models/task_count.dart';
 import 'package:task_manager/data/models/task_count_summary_list_model.dart';
 import 'package:task_manager/data/models/task_list_model.dart';
 import 'package:task_manager/data/network_caller/network_caller.dart';
 import 'package:task_manager/data/network_caller/network_response.dart';
 import 'package:task_manager/data/utility/urls.dart';
+import 'package:task_manager/ui/controllers/new_task_controller.dart';
+import 'package:task_manager/ui/screens/add_new_task_screen.dart';
 import 'package:task_manager/ui/widget/profile_summary_card.dart';
 import 'package:task_manager/ui/widget/summary_card.dart';
 import 'package:task_manager/ui/widget/task_item_card.dart';
@@ -21,9 +24,7 @@ class NewTasksScreen extends StatefulWidget {
 
   class _NewTasksScreenState extends State<NewTasksScreen> {
   //new task gula key get korbey tar code
-    bool getNewTaskInProgress = false;
     bool getTaskCountSummaryInProgress = false;
-    TaskListModel taskListModel = TaskListModel();
     TaskCountSummaryListModel taskCountSummaryListModel = TaskCountSummaryListModel();
 
 
@@ -42,42 +43,35 @@ class NewTasksScreen extends StatefulWidget {
       }
     }
 
-    Future<void> getNewTaskList() async {
-      getNewTaskInProgress = true;
-      if (mounted) {
-        setState(() {});
-      }
-      final NetworkResponse response = await NetworkCaller().getRequest(Urls.getNewTasks);
-      if (response.isSuccess) {
-        taskListModel = TaskListModel.fromJson(response.jsonResponse!);
-      }
-      getNewTaskInProgress = false;
-      if (mounted) {
-        setState(() {});
-      }
-    }
-
     @override
     void initState() {
       super.initState();
+      Get. find<NewTaskController>().getNewTaskList();
       getTaskCountSummaryList();
-      getNewTaskList();
     }
 
 
-    @override
+  @override
   Widget build(BuildContext context) {
 
     return Scaffold(
 
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async{
+          final response = await
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const NewTasksScreen(),
+              builder: (context) => const AddNewTaskScreen(),
             ),
           );
+
+
+          if (response != null && response == true) {
+            Get. find<NewTaskController>().getNewTaskList();
+            getTaskCountSummaryList();
+          }
+
         },
         child: const Icon(Icons.add),
       ),
@@ -96,7 +90,9 @@ class NewTasksScreen extends StatefulWidget {
                 height: 120,
 
                 child: RefreshIndicator(
-                  onRefresh: getNewTaskList, //etar deyar karon e ekon screen er upon er dikey tan diley that mean swap kore tan diley refresh hoibo
+                  onRefresh: () async {
+                    await Get.find<NewTaskController>().getNewTaskList();
+                  }, //etar deyar karon e ekon screen er upon er dikey tan diley that mean swap kore tan diley refresh hoibo
 
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -116,32 +112,38 @@ class NewTasksScreen extends StatefulWidget {
             ),
 
             Expanded(
-              child: Visibility(
-                visible: getNewTaskInProgress==false,
-                replacement: const Center(child: CircularProgressIndicator()),
-                child: ListView.builder(
-                    itemCount: taskListModel.taskList?.length ?? 0 ,//empty to hoitey parey tai ? use korci and 0
-                    itemBuilder: (context, index) {
+              child: GetBuilder<NewTaskController>(
+                builder: (newTaskController) {
+                  //NewTaskController er bitor update call hoibo tokon newTaskController rebuild hoibo ..
+                  return Visibility(
+                    visible: newTaskController.getNewTaskInProgress==false,
+                    replacement: const Center(child: CircularProgressIndicator()),
 
-                      return  TaskItemCard(
-                        task: taskListModel.taskList![index],
+                    child: RefreshIndicator(
+                      onRefresh: () => newTaskController.getNewTaskList(),
+                      child: ListView.builder(
+                          itemCount: newTaskController.taskListModel.taskList?.length ?? 0 ,//empty to hoitey parey tai ? use korci and 0
+                          itemBuilder: (context, index) {
+                      
+                            return  TaskItemCard(
+                              task: newTaskController.taskListModel.taskList![index],
+                      
+                              onStatusChange: () {
+                                newTaskController.getNewTaskList();
+                              },
+                      
+                      
+                              showProgress: (inProgress) {
 
-                        onStatusChange: () {
-                          getNewTaskList();
-                        },
-
-
-                        showProgress: (inProgress) {
-                          getNewTaskInProgress = inProgress;
-                          if (mounted) {
-                            setState(() {});
+                              },
+                      
+                      
+                            );
                           }
-                        },
-
-
-                      );
-                    }
-                ),
+                      ),
+                    ),
+                  );
+                }
               ),
             ),
           ],
